@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>ESP-Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="icon" href="data:,">
+  <style>
+    html {
+      font-family: Sans-serif;
+      display: inline-block;
+      text-align: center;
+    }
+
+    p {
+      font-size: 1.2rem;
+    }
+
+    .page-bg {
+      background-image: url('https://images.unsplash.com/photo-1515387784663-e2e29a23f69e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80');
+      background-size: cover;
+    }
+
+    .topnav {
+      box-shadow: 0px 0px px 0px #c9c5af;
+      margin: 0px auto;
+      border: 10px solid transparent;
+      border-image: url('https://images.unsplash.com/photo-1637881063513-04d79667a101?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80') 10 repeat;
+      display:
+        flex;
+      justify-content:
+        center;
+      overflow: hidden;
+      background-color: rgba(221, 213, 188, 0.9);
+      color: #2b1a04;
+      font-size: 1.7rem;
+      width: 400px;
+      height: 100px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      margin-top: 60px;
+    }
+
+    .content {
+      padding: 50px;
+    }
+
+    .card {
+      background-color: rgba(221, 213, 188, 0.8);
+      border: 10px solid transparent;
+      border-image: url('https://images.unsplash.com/photo-1637881063513-04d79667a101?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80') 10 repeat;
+      box-shadow: 0px 0px 0px 0px #a1954e;
+      border-radius: 10px;
+      margin: 12px;
+    }
+
+    .cards {
+      max-width: 400px;
+      margin: 0px auto;
+      display: flex;
+      flex-wrap: wrap;
+      color: #2b1a04;
+    }
+
+    .card.uLeft,
+    .card.uRight {
+      width: 39%;
+    }
+
+    .card.uLeft {
+      order: 1;
+    }
+
+    .card.uRight {
+      order: 2;
+    }
+
+    .card.uMode,
+    .card.uAudio,
+
+    .card.uLights {
+      width: 100%;
+    }
+
+    .reading {
+      font-size: 2.8rem;
+    }
+
+    .packet {
+      color: #462a06;
+    }
+
+    .card.uLeft {
+      color: #462a06;
+    }
+
+    .card.uRight {
+      color: #462a06;
+    }
+  </style>
+</head>
+
+<body class="page-bg">
+  <div class="topnav">
+    <h3>ESP-Dashboard</h3>
+  </div>
+  <div class="content">
+    <div class="cards">
+      <div class="card uLeft">
+        <h4>Left</h4>
+        <p><span class="reading"><span id="left_value"> </span> </span></p>
+      </div>
+      <div class="card uRight">
+        <h4>Right</h4>
+        <p><span class="reading"><span id="right_value"> </span> </span></p>
+      </div>
+      <div class="card uMode">
+        <h4>Mode</h4>
+        <p><span class="reading"><span id="mode_value"> </span> </span></p>
+      </div>
+      <div class="card uAudio">
+        <h4>Speed</h4>
+      </div>
+      <div class="card uLights">
+        <h4>Placeholder</h4>
+
+        <script>
+          if (!!window.EventSource) {
+            var source = new EventSource('/events');
+
+            source.addEventListener('open', function (e) {
+              console.log("Events Connected");
+            }, false);
+            source.addEventListener('error', function (e) {
+              if (e.target.readyState != EventSource.OPEN) {
+                console.log("Events Disconnected");
+              }
+            }, false);
+
+            source.addEventListener('message', function (e) {
+              console.log("message", e.data);
+            }, false);
+
+            source.addEventListener('new_readings', function (e) {
+              console.log("new_readings", e.data);
+              var obj = JSON.parse(e.data);
+              document.getElementById("left_value").innerHTML = obj.Left;
+              document.getElementById("right_value").innerHTML = obj.Right;
+              document.getElementById("mode_value").innerHTML = obj.Mode;
+              document.getElementById("audio_value").innerHTML = obj.Audio;
+              document.getElementById("lights_value").innerHTML = obj.Lights;
+
+            }, false);
+          }
+        </script>
+</body>
+
+</html>
